@@ -89,6 +89,10 @@ RUN apt-get -y install\
   python2\ 
   bats
 
+# install ctags for lab1 (cs202)
+RUN apt-get -y install\
+    exuberant-ctags
+
 # install Posix man pages (cs202)
 RUN apt-get -y install\
     manpages-posix\
