@@ -43,7 +43,7 @@ fi
 if test -z "$tag" -a "$platform" = linux/arm64; then
     tag=cs202:arm64
 elif test -z "$tag"; then
-    tag=cs202:latest
+    tag=cs202:amd64
 fi
 
 
