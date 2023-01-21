@@ -1,5 +1,9 @@
 BUILD  := build
-STATIC := static
+ifneq ($(shell arch), aarch64) 
+    STATIC := static-x86
+else
+    STATIC := static-arm64
+endif
 
 SOURCES := part1.c part2.c part3.c 
 
