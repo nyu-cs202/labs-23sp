@@ -2,7 +2,12 @@ OBJDIR := obj
 comma = ,
 
 # Cross-compiler toolchain
-GCCPREFIX =
+ifneq ($(shell arch), aarch64) 
+    GCCPREFIX = 
+else
+    GCCPREFIX := /usr/x86_64-linux-gnu/bin/
+endif
+
 CC      = $(GCCPREFIX)cc
 CXX     = $(GCCPREFIX)c++
 AS      = $(GCCPREFIX)as
