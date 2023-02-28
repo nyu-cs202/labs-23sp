@@ -89,8 +89,8 @@ run-%: run-qemu-%
 run-qemu-%: run-$(QEMUDISPLAY)-%
 	@:
 
-run-graphic-%: %.img check-qemu
-	$(call run,$(QEMU_PRELOAD) $(QEMU) $(QEMUOPT) $(QEMUIMG),QEMU $<)
+# run-graphic-%: %.img check-qemu
+#	$(call run,$(QEMU_PRELOAD) $(QEMU) $(QEMUOPT) $(QEMUIMG),QEMU $<)
 
 run-console-%: %.img check-qemu
 	$(call run,$(QEMU_PRELOAD) $(QEMU) $(QEMUOPT) -display curses $(QEMUIMG),QEMU $<)
@@ -104,24 +104,24 @@ run-monitor-%: %.img check-qemu
 run-gdb-%: run-gdb-$(QEMUDISPLAY)-%
 	@:
 
-run-gdb-graphic-%: %.img check-qemu
-	$(call run,$(QEMU_PRELOAD) $(QEMU) $(QEMUOPT) -gdb tcp::1234 $(QEMUIMG) &,QEMU $<)
-	$(call run,sleep 0.5; gdb -x .gdbinit,GDB)
+# run-gdb-graphic-%: %.img check-qemu
+#	$(call run,$(QEMU_PRELOAD) $(QEMU) $(QEMUOPT) -gdb tcp::1234 $(QEMUIMG) &,QEMU $<)
+#	$(call run,sleep 0.5; gdb -x .gdbinit,GDB)
 
 run-gdb-console-%: %.img check-qemu
-	$(call run,$(QEMU_PRELOAD) $(QEMU) $(QEMUOPT) -curses -gdb tcp::1234 $(QEMUIMG),QEMU $<)
+	$(call run,$(QEMU_PRELOAD) $(QEMU) $(QEMUOPT) -display curses -gdb tcp::1234 $(QEMUIMG),QEMU $<)
 
 run: run-qemu-$(basename $(IMAGE))
 run-qemu: run-qemu-$(basename $(IMAGE))
-run-graphic: run-graphic-$(basename $(IMAGE))
+# run-graphic: run-graphic-$(basename $(IMAGE))
 run-nographic: run-nographic-$(basename $(IMAGE))
 run-console: run-console-$(basename $(IMAGE))
 run-monitor: run-monitor-$(basename $(IMAGE))
 run-quit: run-quit-$(basename $(IMAGE))
 run-gdb: run-gdb-$(basename $(IMAGE))
-run-gdb-graphic: run-gdb-graphic-$(basename $(IMAGE))
+# run-gdb-graphic: run-gdb-graphic-$(basename $(IMAGE))
 run-gdb-console: run-gdb-console-$(basename $(IMAGE))
-run-graphic-gdb: run-gdb-graphic-$(basename $(IMAGE))
+# run-graphic-gdb: run-gdb-graphic-$(basename $(IMAGE))
 run-console-gdb: run-gdb-console-$(basename $(IMAGE))
 
 # Grading targets
