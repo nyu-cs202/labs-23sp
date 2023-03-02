@@ -58,6 +58,7 @@ class Item {
  *          - addItem,
  *          - removeItem,
  *          - addStock,
+ *          - priceItem,
  *          - discountItem
  *      that reference different item ids must process at the same
  *      time. The buyManyItems method only functions in this mode.
