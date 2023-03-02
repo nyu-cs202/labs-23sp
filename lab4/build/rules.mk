@@ -2,7 +2,7 @@ OBJDIR := obj
 comma = ,
 
 # Cross-compiler toolchain
-ifneq ($(shell arch), aarch64) 
+ifneq ($(strip $(shell arch)),aarch64) 
     GCCPREFIX = 
 else
     GCCPREFIX := /usr/x86_64-linux-gnu/bin/
@@ -37,7 +37,7 @@ CFLAGS += $(shell $(CC) -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 &
 DEPCFLAGS = -MD -MF $(DEPSDIR)/$*.d -MP
 
 # Linker flags
-LDFLAGS := $(LDFLAGS) -Os --gc-sections -z max-page-size=0x1000 -static 
+LDFLAGS := $(LDFLAGS) -Os --gc-sections -z max-page-size=0x1000 -static -nostdlib
 LDFLAGS	+= $(shell $(LD) -m elf_x86_64 --help >/dev/null 2>&1 && echo -m elf_x86_64)
 
 
@@ -79,10 +79,13 @@ INFERRED_QEMU := $(shell if which qemu-system-x86_64 2>/dev/null | grep ^/ >/dev
 	then echo qemu; else echo qemu-system-x86_64; fi)
 QEMU ?= $(INFERRED_QEMU)
 QEMUOPT	= -net none -parallel file:log.txt
+QEMUGRADEOPT = -net none
 QEMUCONSOLE ?= $(if $(DISPLAY),,1)
 QEMUDISPLAY = $(if $(QEMUCONSOLE),console,graphic)
 
+ifneq ($(strip $(shell arch)),aarch64)
 QEMU_PRELOAD_LIBRARY = $(OBJDIR)/libqemu-nograb.so.1
+endif
 
 $(QEMU_PRELOAD_LIBRARY): build/qemu-nograb.c
 	$(call run,mkdir -p $(@D))

@@ -98,6 +98,9 @@ run-console-%: %.img check-qemu
 run-nographic-%: %.img check-qemu
 	$(call run,$(QEMU_PRELOAD) $(QEMU) $(QEMUOPT) -nographic $(QEMUIMG),QEMU $<)
 
+run-nographic-grade-%: %.img check-qemu
+	$(call run,$(QEMU_PRELOAD) $(QEMU) $(QEMUGRADEOPT) -parallel file:$(TMPFILE) -nographic $(QEMUIMG),QEMU $<)
+
 run-monitor-%: %.img check-qemu
 	$(call run,$(QEMU_PRELOAD) $(QEMU) $(QEMUOPT) -monitor stdio $(QEMUIMG),QEMU $<)
 
@@ -115,6 +118,7 @@ run: run-qemu-$(basename $(IMAGE))
 run-qemu: run-qemu-$(basename $(IMAGE))
 # run-graphic: run-graphic-$(basename $(IMAGE))
 run-nographic: run-nographic-$(basename $(IMAGE))
+run-nographic-grade: run-nographic-grade-$(basename $(IMAGE))
 run-console: run-console-$(basename $(IMAGE))
 run-monitor: run-monitor-$(basename $(IMAGE))
 run-quit: run-quit-$(basename $(IMAGE))
@@ -126,16 +130,16 @@ run-console-gdb: run-gdb-console-$(basename $(IMAGE))
 
 # Grading targets
 grade-one: 
-	$(call run,rm log.txt > /dev/null 2>&1;$(MAKE) run-nographic TICK_LIMIT=1000 NO_SLOWDOWN=1 > /dev/null 2>&1; python2 parse_log.py --grade_up_to 1)
+	$(call run,TMPFILE=$$(mktemp); $(MAKE) run-nographic-grade TICK_LIMIT=1000 NO_SLOWDOWN=1 TMPFILE=$$TMPFILE > /dev/null 2>&1; python3 parse_log.py --tmpfile $$TMPFILE --grade_up_to 1)
 grade-two: 
-	$(call run,rm log.txt > /dev/null 2>&1;$(MAKE) run-nographic TICK_LIMIT=1000 NO_SLOWDOWN=1 > /dev/null 2>&1; python2 parse_log.py --grade_up_to 2)
+	$(call run,TMPFILE=$$(mktemp); $(MAKE) run-nographic-grade TICK_LIMIT=1000 NO_SLOWDOWN=1 TMPFILE=$$TMPFILE > /dev/null 2>&1; python3 parse_log.py --tmpfile $$TMPFILE --grade_up_to 2)
 grade-three: 
-	$(call run,rm log.txt > /dev/null 2>&1;$(MAKE) run-nographic TICK_LIMIT=1000 NO_SLOWDOWN=1 > /dev/null 2>&1; python2 parse_log.py --grade_up_to 3)
+	$(call run,TMPFILE=$$(mktemp); $(MAKE) run-nographic-grade TICK_LIMIT=1000 NO_SLOWDOWN=1 TMPFILE=$$TMPFILE > /dev/null 2>&1; python3 parse_log.py --tmpfile $$TMPFILE --grade_up_to 3)
 grade-four: 
-	$(call run,rm log.txt > /dev/null 2>&1;$(MAKE) run-nographic TICK_LIMIT=1000 NO_SLOWDOWN=1 > /dev/null 2>&1; python2 parse_log.py --grade_up_to 4)
+	$(call run,TMPFILE=$$(mktemp); $(MAKE) run-nographic-grade TICK_LIMIT=1000 NO_SLOWDOWN=1 TMPFILE=$$TMPFILE > /dev/null 2>&1; python3 parse_log.py --tmpfile $$TMPFILE --grade_up_to 4)
 grade-five:
-	$(call run,rm log.txt > /dev/null 2>&1;$(MAKE) run-nographic TICK_LIMIT=1000 NO_SLOWDOWN=1 > /dev/null 2>&1; python2 parse_log.py --grade_up_to 4 --output score)
-	$(call run,rm log.txt > /dev/null 2>&1;$(MAKE) run-nographic FORCE_FORK=1 TICK_LIMIT=1000 NO_SLOWDOWN=1 > /dev/null 2>&1; python2 parse_log.py --grade_from 4 --grade_up_to 5 --output score_five)
+	$(call run,TMPFILE=$$(mktemp); $(MAKE) run-nographic-grade TICK_LIMIT=1000 NO_SLOWDOWN=1 TMPFILE=$$TMPFILE > /dev/null 2>&1; python3 parse_log.py --tmpfile $$TMPFILE --grade_up_to 4 --output score)
+	$(call run,TMPFILE=$$(mktemp); $(MAKE) run-nographic-grade FORCE_FORK=1 TICK_LIMIT=1000 NO_SLOWDOWN=1 TMPFILE=$$TMPFILE > /dev/null 2>&1; python3 parse_log.py --tmpfile $$TMPFILE --grade_from 4 --grade_up_to 5 --output score_five)
 	$(call run,paste score score_five | awk '{print "Total score: " $$1 + $$2 "/5"}')
 
 # Kill all my qemus
