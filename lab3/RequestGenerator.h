@@ -15,7 +15,7 @@ class RequestGenerator {
 
     public:
     RequestGenerator(TaskQueue* queue);
-    ~RequestGenerator();
+    virtual ~RequestGenerator();
 
     void enqueueTasks(int maxTasks, EStore* store);
     void enqueueStops(int num);
