@@ -78,7 +78,7 @@ INFERRED_QEMU := $(shell if which qemu-system-x86_64 2>/dev/null | grep ^/ >/dev
 	elif grep 16 /etc/fedora-release >/dev/null 2>&1; \
 	then echo qemu; else echo qemu-system-x86_64; fi)
 QEMU ?= $(INFERRED_QEMU)
-QEMUOPT	= -net none -parallel file:log.txt
+QEMUOPT	= -net none -parallel file:/tmp/log.txt
 QEMUGRADEOPT = -net none
 QEMUCONSOLE ?= $(if $(DISPLAY),,1)
 QEMUDISPLAY = $(if $(QEMUCONSOLE),console,graphic)
