@@ -20,11 +20,13 @@ There are several ways to run the OS.
     Build the OS and run QEMU in the current terminal window. Type
     Control-C in the terminal to exit the OS.
 
-In all of these run modes, QEMU also creates a file named `log.txt`.
+In all of these run modes, QEMU also creates a file named `/tmp/log.txt`.
 As you debug you may find it useful to add your own calls to `log_printf`
-within the kernel; output from log_printf goes to log.txt.
+within the kernel; output from log_printf goes to /tmp/log.txt.
 
 Finally, run `make clean` to clean up your directory.
+
+NOTE: when running under Docker containerization, `make run` and `make run-console` do the same thing, because Docker does not provide a graphical interface, so QEMU (running on Linux in Docker) does not offer graphics hardware to the guest OS.
 
 Source
 ------
@@ -43,7 +45,7 @@ more fundamental issues. Here is an overview of the code.
 === Support code ===
 
 You may read these if you're interested but you should be able to do
-the coursework using only the code and descriptions in `kernel.c`, `lib.h`,
+the lab using only the code and descriptions in `kernel.c`, `lib.h`,
 and `kernel.h`.
 
 *   `bootstart.S`, `boot.c`: The bootloader.
@@ -86,11 +88,11 @@ look at and puts them in the `obj/` directory.
 Troubleshooting
 ---------------
 
-The OS runs using the QEMU full-system emulator. We give instructions
-for installing QEMU on our devbox. If you run on your own Linux machine,
-you will need to install QEMU yourself. On Debian- and Ubuntu-based hosts, run
-`sudo apt-get install qemu`. On Fedora-based hosts, run `sudo yum
-install qemu-system-x86`.
+The OS runs using the QEMU full-system emulator. If you run on your own Linux
+machine (as opposed to the class containerization environment or a virtual
+cs202 devbox), you will need to install QEMU yourself. On Debian- and
+Ubuntu-based hosts, run `sudo apt-get install qemu`. On Fedora-based hosts, run
+`sudo yum install qemu-system-x86`.
 
 If Control-C doesn't work on your QEMU, make sure you are using an
 actual Control key. On some machines QEMU ignores key remappings (such
