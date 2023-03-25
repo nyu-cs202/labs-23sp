@@ -1,5 +1,6 @@
 from collections import namedtuple, defaultdict
 import argparse
+import sys
 import os.path
 
 parser = argparse.ArgumentParser(description='Grade lab')
