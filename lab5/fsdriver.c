@@ -590,8 +590,8 @@ main(int argc, char **argv)
 			fuse_opt_add_arg(&args, argv[r]);
 		}
 	}
-    if (imgname == NULL)
-        panic("NULL imgname");
+        if (imgname == NULL)
+            panic("NULL imgname");
 
 	// Use a fsname (which shows up in df) in the style of sshfs, another
 	// FUSE-based file system, with format "fsname#fslocation".
