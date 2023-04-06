@@ -90,6 +90,12 @@ RUN apt-get -y install\
     manpages-posix\
     manpages-posix-dev
 
+# install fuse for lab5
+RUN apt-get -y install\
+    pkg-config\
+    libfuse-dev\
+    fuse
+
 # set up default locale
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
