@@ -573,7 +573,11 @@ int
 main(int argc, char **argv)
 {
 	struct fuse_args args = FUSE_ARGS_INIT(0, NULL);
-	const char *imgname = NULL, *mntpoint = NULL;
+        // initializing imgname to be empty string, as opposed to NULL,
+        // because the compiler is wrongly giving a warning
+        // on the snprintf line below, and it could be scary.
+        // This alternative avoids that warning.
+	const char *imgname = "", *mntpoint = NULL;
 	char fsname_buf[17 + PATH_MAX];
 	int r;
 
@@ -581,7 +585,7 @@ main(int argc, char **argv)
 	if (argc < 2)
 		panic("missing image or mountpoint parameter, see help");
 	for (r = 1; r < argc; r++) {
-		if (imgname == NULL && argv[r][0] != '-' && strcmp(argv[r - 1], "-o") != 0) {
+		if (strlen(imgname) == 0 && argv[r][0] != '-' && strcmp(argv[r - 1], "-o") != 0) {
 			imgname = argv[r];
 		} else if(mntpoint == NULL && argv[r][0] != '-' && strcmp(argv[r - 1], "-o") != 0) {
 			mntpoint = argv[r];
@@ -590,9 +594,9 @@ main(int argc, char **argv)
 			fuse_opt_add_arg(&args, argv[r]);
 		}
 	}
-        if (imgname == NULL)
-            panic("NULL imgname");
-
+        if (strlen(imgname) == 0)
+            panic("No imgname");
+        
 	// Use a fsname (which shows up in df) in the style of sshfs, another
 	// FUSE-based file system, with format "fsname#fslocation".
 	snprintf(fsname_buf, sizeof(fsname_buf), "-ofsname=CS202fs#%s", imgname);
